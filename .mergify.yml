@@ -1,0 +1,58 @@
+pull_request_rules:
+
+  - name: 🚫 Skip WIP/DRAFT/conflicted/huge PRs
+    conditions:
+      - base=main
+      - or:
+          - title~=\[WIP\]
+          - draft
+          - conflict
+          - changes>200
+    actions:
+      comment:
+        message: |
+          ⚠️ Skipping auto-merge:
+          - PR is WIP, draft, has conflicts, or too large (>200 LOC changed).
+          Please resolve manually before proceeding.
+
+  - name: ✅ Auto-approve tiny doc/config-only PRs
+    conditions:
+      - changes<=10
+      - files~=docs/**|**/*.md|**/*.yml|**/*.yaml|**/*.properties|**/openapi/**
+      - status-success=build
+      - -draft
+    actions:
+      review:
+        type: APPROVE
+        message: |
+          ✅ Auto-approved by Mergify AI:
+          - Minor changes
+          - Safe file types
+          - All checks passed
+
+  - name: 🏷 Add auto-ai label for trivial PRs
+    conditions:
+      - changes<=20
+      - files~=(src/main/java/.+Controller\.java|.+DTO\.java|docs/.*)
+      - status-success=build
+    actions:
+      label:
+        add:
+          - auto-ai
+      comment:
+        message: |
+          🧠 Added `auto-ai` label based on safe change pattern.
+
+  - name: 🔁 Auto-merge AI-reviewed PRs (delayed 30s)
+    conditions:
+      - label=auto-ai
+      - status-success=build
+      - approved-reviews-by>=1
+      - -draft
+    actions:
+      merge:
+        method: squash
+        commit_message: title+body
+        strict: smart
+        strict_method: merge
+        delay: 30s
