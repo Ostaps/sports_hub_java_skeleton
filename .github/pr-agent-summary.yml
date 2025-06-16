@@ -1,0 +1,22 @@
+pr-agent:
+  github_app:
+    enabled: true
+
+  behavior:
+    summarize_on_open: false
+    review_on_open: false
+    review_on_label: 'codium-review'
+    summarize_on_label: 'codium-summary'
+    update_existing_comment: true
+
+  review:
+    enable_multi_line_comments: true
+    include_code_suggestions: true
+
+  summarization:
+    include_code_snippets: false
+    summarization_type: changes
+
+  general:
+    language: English
+    enable_pr_auto_labeling: false
