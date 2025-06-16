@@ -1,20 +1,13 @@
 pull_request_rules:
-  - name: ✅ Auto-approve any open PR
+  - name: ✅ Auto-approve and merge any non-draft PR into main if checks pass
     conditions:
       - base=main
       - -draft
+      - check-success~=.*
     actions:
       review:
         type: APPROVE
         message: |
-          ✅ Auto-approved by Mergify AI (no draft, base=main)
-
-  - name: 🔁 Auto-merge if any checks pass and approved
-    conditions:
-      - base=main
-      - check-success~=.*
-      - approved-reviews-by>=1
-      - -draft
-    actions:
+          ✅ Auto-approved by Mergify AI (checks passed, base=main)
       merge:
         method: squash
