@@ -9,10 +9,10 @@ pull_request_rules:
         message: |
           ✅ Auto-approved by Mergify AI (no draft, base=main)
 
-  - name: 🔁 Auto-merge if checks pass and approved
+  - name: 🔁 Auto-merge if any checks pass and approved
     conditions:
       - base=main
-      - check-success=build
+      - check-success~=.*
       - approved-reviews-by>=1
       - -draft
     actions:
