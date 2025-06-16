@@ -1,0 +1,25 @@
+name: ReviewGPT AI Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ai_review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run ReviewGPT
+        uses: davidahouse/reviewgpt@v0.9.0
+        with:
+          reviewgpt-token: ${{ secrets.REVIEWGPT_TOKEN }}
+          openai-api-key: ${{ secrets.OPENROUTER_API_KEY }}
+          model: openrouter/gpt-4
+          prompt: |
+            You are a senior Java reviewer. Focus only on:
+            - Controllers, Services, DTOs
+            - Null checks, validation, bad naming
+            - Code duplication
+            Respond in a structured bullet list, be short and clear.
