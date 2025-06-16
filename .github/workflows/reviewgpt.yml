@@ -1,24 +1,22 @@
-name: ReviewGPT AI Review
+name: AI Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize]
 
 jobs:
-  ai_review:
+  review:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Run ReviewGPT
-        uses: review-gpt/action@main
+      - name: Run AI review
+        uses: kriasoft/ai-pr-reviewer@main
         with:
-          openai-api-key: ${{ secrets.OPENROUTER_API_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           model: openrouter/gpt-4
+          openai-api-key: ${{ secrets.OPENROUTER_API_KEY }}
           prompt: |
-            You are a senior Java reviewer. Focus only on:
-            - Controllers, Services, DTOs
-            - Null checks, validation, bad naming
-            - Code duplication
-            Respond in a structured bullet list, be short and clear.
+            You are a senior Java engineer.
+            Review changes related to controllers, services and test logic.
+            Focus on null checks, bad naming and redundancy.
