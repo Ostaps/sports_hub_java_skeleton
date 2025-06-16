@@ -13,4 +13,6 @@ public interface ArticleService {
     ArticleDTO createArticle(CreateArticleDTO createArticleDTO);
 
     ArticleDTO updateArticle(String id, CreateArticleDTO updateDTO);
+
+    ArticleDTO getArticleById(String id);
 }

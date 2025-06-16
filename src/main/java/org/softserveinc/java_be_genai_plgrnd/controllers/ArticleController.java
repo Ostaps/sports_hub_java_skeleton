@@ -68,14 +68,22 @@ public class ArticleController {
         );
     }
 
-    @PutMapping("/api/articles/{id}")
+    @Operation(summary = "Update an article")
+    @SecurityRequirement(name = "bearerAuth")
+    @PutMapping("/{id}")
     public ResponseEntity<ArticleResponse> updateArticle(
             @PathVariable String id,
             @RequestBody @Valid CreateArticleRequest request
     ) {
+        if (request == null) {
+            throw new IllegalArgumentException("Request cannot be null");
+        }
+        
+        String articleId = id.toString();
+        
         return ResponseEntity.ok(
                 ArticleResponse.fromDTO(
-                        articleService.updateArticle(id, CreateArticleDTO.fromRequest(request))
+                        articleService.updateArticle(articleId, CreateArticleDTO.fromRequest(request))
                 )
         );
     }

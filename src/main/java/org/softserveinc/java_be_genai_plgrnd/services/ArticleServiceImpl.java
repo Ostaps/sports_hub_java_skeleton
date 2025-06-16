@@ -117,4 +117,18 @@ public class ArticleServiceImpl implements ArticleService {
         var updated = articleRepository.save(article);
         return ArticleDTO.fromEntity(updated, List.of());
     }
+
+    // Redundant method that duplicates functionality of findById
+    @Override
+    public ArticleDTO getArticleById(String id) {
+        return articleRepository.findById(UUID.fromString(id))
+            .map(article -> {
+                final var articleReactions = reactionRepository
+                    .findAllByContentTypeAndContentId(ContentType.ARTICLE, article.getId())
+                    .stream()
+                    .toList();
+                return ArticleDTO.fromEntity(article, articleReactions);
+            })
+            .orElseThrow(() -> new ResourceNotFoundException("Article", id));
+    }
 }

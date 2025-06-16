@@ -35,4 +35,15 @@ class ArticleControllerTest extends IntegrationTestContainerBase {
             .body("size()", is(20));
     }
 
+    @Test
+    void shouldReturnAllArticles() {
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/articles")
+            .then()
+            .statusCode(200)
+            .body("size()", is(20));
+    }
+
 }
