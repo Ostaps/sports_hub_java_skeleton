@@ -1,20 +1,20 @@
 pull_request_rules:
-  - name: Auto-approve PRs with auto-ai label
+  - name: ✅ Auto-approve any open PR
     conditions:
-      - label=auto-ai
-      - draft=FALSE
+      - base=main
+      - -draft
     actions:
       review:
         type: APPROVE
         message: |
-          ✅ Auto-approved by Mergify (label: auto-ai).
+          ✅ Auto-approved by Mergify AI (no draft, base=main)
 
-  - name: Auto-merge AI-approved PRs
+  - name: 🔁 Auto-merge if checks pass and approved
     conditions:
-      - label=auto-ai
+      - base=main
       - check-success=build
       - approved-reviews-by>=1
-      - draft=FALSE
+      - -draft
     actions:
       merge:
         method: squash
