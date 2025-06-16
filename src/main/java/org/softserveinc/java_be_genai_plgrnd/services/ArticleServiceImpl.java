@@ -23,8 +23,8 @@ public class ArticleServiceImpl implements ArticleService {
     private final ReactionRepository reactionRepository;
 
     public ArticleServiceImpl(
-        ArticleRepository articleRepository,
-        ReactionRepository reactionRepository
+            ArticleRepository articleRepository,
+            ReactionRepository reactionRepository
     ) {
         this.articleRepository = articleRepository;
         this.reactionRepository = reactionRepository;
@@ -40,14 +40,14 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleDTO> findAllWithComments() {
         final var articles = articleRepository.findAllWithComments();
         final var articleReactions = reactionRepository
-            .findAllByContentType(ContentType.ARTICLE)
-            .stream()
-            .collect(Collectors.groupingBy(ReactionEntity::getContentId));
+                .findAllByContentType(ContentType.ARTICLE)
+                .stream()
+                .collect(Collectors.groupingBy(ReactionEntity::getContentId));
 
         return articles.stream()
-            .map(article -> ArticleDTO.fromEntity(article, articleReactions.get(article.getId())))
-            .sorted((a1, a2) -> a2.creationTimestamp().compareTo(a1.creationTimestamp()))
-            .toList();
+                .map(article -> ArticleDTO.fromEntity(article, articleReactions.get(article.getId())))
+                .sorted((a1, a2) -> a2.creationTimestamp().compareTo(a1.creationTimestamp()))
+                .toList();
     }
 
     /**
@@ -60,14 +60,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDTO findById(String id) {
         return articleRepository.findById(UUID.fromString(id))
-            .map(article -> {
-                final var articleReactions = reactionRepository
-                    .findAllByContentTypeAndContentId(ContentType.ARTICLE, article.getId())
-                    .stream()
-                    .toList();
-                return ArticleDTO.fromEntity(article, articleReactions);
-            })
-            .orElseThrow(() -> new ResourceNotFoundException("Article", id));
+                .map(article -> {
+                    final var articleReactions = reactionRepository
+                            .findAllByContentTypeAndContentId(ContentType.ARTICLE, article.getId())
+                            .stream()
+                            .toList();
+                    return ArticleDTO.fromEntity(article, articleReactions);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Article", id));
     }
 
     /**
@@ -116,47 +116,5 @@ public class ArticleServiceImpl implements ArticleService {
 
         var updated = articleRepository.save(article);
         return ArticleDTO.fromEntity(updated, List.of());
-    }
-
-    // Redundant methods with code smells
-    @Override
-    public ArticleDTO getArticleById(String id) {
-        // Unnecessary string conversion
-        String articleId = id.toString();
-        return findById(articleId);
-    }
-
-    @Override
-    public ArticleDTO findArticleById(String id) {
-        // Unnecessary null check
-        if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
-        }
-        return findById(id);
-    }
-
-    @Override
-    public ArticleDTO retrieveArticleById(String id) {
-        // Unnecessary try-catch
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Article", id);
-        }
-    }
-
-    @Override
-    public List<ArticleDTO> getAllArticles() {
-        // Unnecessary stream operations
-        return findAllWithComments().stream()
-            .filter(article -> article != null)
-            .toList();
-    }
-
-    @Override
-    public List<ArticleDTO> fetchAllArticles() {
-        // Unnecessary intermediate variable
-        List<ArticleDTO> articles = findAllWithComments();
-        return articles;
     }
 }
