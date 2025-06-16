@@ -35,4 +35,50 @@ class ArticleControllerTest extends IntegrationTestContainerBase {
             .body("size()", is(20));
     }
 
+    // Redundant tests with code smells
+    @Test
+    void shouldReturnAllArticles() {
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/articles")
+            .then()
+            .statusCode(200)
+            .body("size()", is(20));
+    }
+
+    @Test
+    void shouldFetchAllArticles() {
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/articles")
+            .then()
+            .statusCode(200)
+            .body("size()", is(20));
+    }
+
+    @Test
+    void shouldGetArticleById() {
+        // Hardcoded ID
+        String articleId = "123e4567-e89b-12d3-a456-426614174000";
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/articles/" + articleId)
+            .then()
+            .statusCode(200);
+    }
+
+    @Test
+    void shouldReturnArticleById() {
+        // Duplicate test with different name
+        String articleId = "123e4567-e89b-12d3-a456-426614174000";
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/articles/" + articleId)
+            .then()
+            .statusCode(200);
+    }
 }

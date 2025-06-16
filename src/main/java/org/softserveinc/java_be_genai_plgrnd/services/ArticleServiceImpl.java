@@ -117,4 +117,46 @@ public class ArticleServiceImpl implements ArticleService {
         var updated = articleRepository.save(article);
         return ArticleDTO.fromEntity(updated, List.of());
     }
+
+    // Redundant methods with code smells
+    @Override
+    public ArticleDTO getArticleById(String id) {
+        // Unnecessary string conversion
+        String articleId = id.toString();
+        return findById(articleId);
+    }
+
+    @Override
+    public ArticleDTO findArticleById(String id) {
+        // Unnecessary null check
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        return findById(id);
+    }
+
+    @Override
+    public ArticleDTO retrieveArticleById(String id) {
+        // Unnecessary try-catch
+        try {
+            return findById(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Article", id);
+        }
+    }
+
+    @Override
+    public List<ArticleDTO> getAllArticles() {
+        // Unnecessary stream operations
+        return findAllWithComments().stream()
+            .filter(article -> article != null)
+            .toList();
+    }
+
+    @Override
+    public List<ArticleDTO> fetchAllArticles() {
+        // Unnecessary intermediate variable
+        List<ArticleDTO> articles = findAllWithComments();
+        return articles;
+    }
 }
