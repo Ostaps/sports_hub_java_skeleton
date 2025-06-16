@@ -13,4 +13,15 @@ public interface ArticleService {
     ArticleDTO createArticle(CreateArticleDTO createArticleDTO);
 
     ArticleDTO updateArticle(String id, CreateArticleDTO updateDTO);
+
+    // Redundant methods that duplicate functionality
+    ArticleDTO getArticleById(String id);
+    
+    ArticleDTO findArticleById(String id);
+    
+    ArticleDTO retrieveArticleById(String id);
+    
+    List<ArticleDTO> getAllArticles();
+    
+    List<ArticleDTO> fetchAllArticles();
 }
