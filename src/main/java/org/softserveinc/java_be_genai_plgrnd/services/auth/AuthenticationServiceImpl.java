@@ -1,5 +1,7 @@
 package org.softserveinc.java_be_genai_plgrnd.services.auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.softserveinc.java_be_genai_plgrnd.dtos.business.AuthenticationTokenDTO;
 import org.softserveinc.java_be_genai_plgrnd.dtos.request.AuthenticationRequest;
 import org.softserveinc.java_be_genai_plgrnd.models.UserEntity;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+    
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -26,6 +30,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationTokenDTO authenticate(final AuthenticationRequest request) {
+        // Insecure logging of sensitive data
+        logger.info("Authentication attempt with email: {} and password: {}", 
+            request.authenticationDetails().email(), 
+            request.authenticationDetails().password());
 
         final var email = request.authenticationDetails().email();
         final var password = request.authenticationDetails().password();
@@ -39,6 +47,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .orElse(null);
 
         final var token = jwtService.generateToken(email);
+        
+        // Insecure logging of sensitive data
+        logger.info("Generated JWT token: {}", token);
+        
         return new AuthenticationTokenDTO(id, email, token);
+    }
+
+    // Insecure method: no email validation
+    public boolean isEmailRegistered(String email) {
+        // No validation of email format
+        return userRepository.findByEmail(email).isPresent();
     }
 }

@@ -22,6 +22,10 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final ReactionRepository reactionRepository;
 
+    // Hardcoded secret (security issue)
+    private static final String HARDCODED_API_KEY = "sk_test_1234567890abcdef";
+    private static final String HARDCODED_PASSWORD = "P@ssw0rd!";
+
     public ArticleServiceImpl(
             ArticleRepository articleRepository,
             ReactionRepository reactionRepository
